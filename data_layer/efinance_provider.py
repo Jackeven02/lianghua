@@ -39,19 +39,41 @@ class EFinanceProvider:
         self.cache = {}
         self.cache_timeout = 300
         
-    def get_stock_data(self, stock_code: str, days: int = 120) -> pd.DataFrame:
-        """获取股票历史数据并计算技术指标"""
+    def get_stock_data(self, stock_code: str, days: int = 120, klt: int = 101) -> pd.DataFrame:
+        """
+        获取股票历史数据并计算技术指标
+        
+        Parameters:
+        -----------
+        stock_code : str
+            股票代码
+        days : int
+            获取天数（对于分钟数据，表示获取的数据条数）
+        klt : int
+            K线类型
+            - 1: 1分钟
+            - 5: 5分钟
+            - 15: 15分钟
+            - 30: 30分钟
+            - 60: 60分钟
+            - 101: 日线（默认）
+            - 102: 周线
+            - 103: 月线
+        """
         try:
-            cache_key = f"stock_{stock_code}_{days}"
+            cache_key = f"stock_{stock_code}_{days}_{klt}"
             if cache_key in self.cache:
                 cached_data, cached_time = self.cache[cache_key]
-                if (datetime.now() - cached_time).seconds < self.cache_timeout:
-                    logger.info(f"使用缓存数据: {stock_code}")
+                # 分钟数据缓存时间更短（1分钟），日线数据5分钟
+                cache_timeout = 60 if klt < 101 else self.cache_timeout
+                if (datetime.now() - cached_time).seconds < cache_timeout:
+                    logger.info(f"使用缓存数据: {stock_code} (klt={klt})")
                     return cached_data
             
-            logger.info(f"获取股票数据: {stock_code}")
+            logger.info(f"获取股票数据: {stock_code} (klt={klt})")
             
-            df = ef.stock.get_quote_history(stock_code)
+            # 获取指定频率的K线数据
+            df = ef.stock.get_quote_history(stock_code, klt=klt)
             
             if df is None or df.empty:
                 logger.warning(f"无法获取 {stock_code} 的数据")
@@ -59,6 +81,7 @@ class EFinanceProvider:
             
             df = self._preprocess_stock_data(df)
             
+            # 限制数据条数
             if len(df) > days:
                 df = df.iloc[-days:].copy()
             
@@ -66,7 +89,7 @@ class EFinanceProvider:
             
             self.cache[cache_key] = (df_with_indicators, datetime.now())
             
-            logger.info(f"成功获取 {stock_code} 数据，共 {len(df_with_indicators)} 条")
+            logger.info(f"成功获取 {stock_code} 数据，共 {len(df_with_indicators)} 条 (klt={klt})")
             
             return df_with_indicators
             
