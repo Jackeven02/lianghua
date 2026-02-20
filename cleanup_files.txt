@@ -1,0 +1,64 @@
+# 需要删除的多余文件列表
+
+## 测试文件 (可删除)
+button_test.py
+module_test.py
+simple_test.py
+temp_test_data.py
+test_import.py
+test_main.py
+test_quant.py
+test_real_data.py
+real_data_test.py
+ui_test.py
+
+## 重复的启动文件 (保留start_modern.bat和start.py)
+clean_start.py
+final_start.py
+fixed_start_analyzer.py
+launch_analyzer.py
+launch_app.py
+launch_integrated_gui.py
+launch_simple_gui.py
+run_analyzer.py
+run_analyzer_eng.py
+simple_cli.py
+smart_launcher.py
+start_analyzer.py
+start_gui.py
+start_quant_analyzer.py
+
+## 重复的主程序文件 (保留main_modern_beautiful.py和main_gui.py)
+main.py
+main_complete.py
+main_complete_functional.py
+main_enhanced.py
+main_enhanced_simple.py
+main_integrated.py
+main_optimized.py
+main_optimized_simple.py
+main_simple.py
+main_simple_functional.py
+integrated_simple_gui.py
+simple_gui.py
+quant_analyzer_app.py
+quant_analyzer_fixed.py
+
+## 重复的示例文件 (保留demo_advisor.py和demo_scanner.py)
+example_smart_advisor_mock.py
+
+## 重复的文档 (整合后删除)
+GUI_GUIDE.md
+README_FINAL.md
+DEVELOPMENT_SUMMARY.md
+
+## 构建文件 (可删除，太大)
+quant_analyzer.zip
+build/ (整个目录)
+dist/ (整个目录)
+__pycache__/ (整个目录)
+
+## PyCache目录
+strategy_layer/__pycache__/
+ui_layer/__pycache__/
+config/__pycache__/
